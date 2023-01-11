@@ -1,3 +1,13 @@
+# Holonym Client Portal
+
+This app allows Holonym clients to manage their API keys and sessions.
+
+Sessions are for off-chain proofs.
+
+At the time of this writing, the backend for this is in [id-server](https://github.com/holonym-foundation/id-server).
+
+# Next.js stuff...
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
