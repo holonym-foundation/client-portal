@@ -202,7 +202,6 @@ label {
   width: 100%;
 }
 
-/* General styles for the table */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -210,12 +209,10 @@ table {
   border-spacing: 0;
 }
 
-/* Styles for the table head */
 thead {
   background-color: #f5f5f5;
 }
 
-/* Styles for the table cells */
 td,
 th {
   padding: 1rem;
@@ -223,10 +220,8 @@ th {
   border-bottom: 1px solid #e5e5e5;
 }
 
-/* Styles for the table headings */
 th {
   font-weight: 600;
-  text-transform: uppercase;
 }
 
 /* Additional styles for the API Keys view */
@@ -315,4 +310,16 @@ code {
 
 .copy-btn:active {
   background-color: #2b669a;
+}
+
+.link {
+  color: #007aff;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+}
+
+.link:hover {
+  cursor: pointer;
+  text-decoration: underline;
 }

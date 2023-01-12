@@ -2,7 +2,7 @@ import Head from "next/head";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import LoginForm from "../components/LoginForm";
-import Home from "../components/Home";
+import ClientHome from "../components/ClientHome";
 
 export default function Index() {
   const [username, setUsername] = useState<string>("");
@@ -35,7 +35,7 @@ export default function Index() {
             {/* <div>
               <h2>Sessions</h2>
             </div> */}
-            <Home />
+            <ClientHome />
           </div>
         ) : (
           <LoginForm onLogin={setUsername} />

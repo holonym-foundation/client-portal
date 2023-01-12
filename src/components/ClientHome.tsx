@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { idServerUrl } from "../constants/misc";
 
-export default function Home() {
-  const [selectedView, setSelectedView] = useState("api-keys");
+export default function ClientHome() {
+  const [selectedView, setSelectedView] = useState("sessions");
   const [apiKeys, setApiKeys] = useState<APIKey[]>([]);
   const [sessions, setSessions] = useState<Session[]>([]);
 
@@ -86,16 +86,16 @@ export default function Home() {
     <div className="home-page-container">
       <div className="menu-container">
         <button
-          data-selected={selectedView === "api-keys"}
-          onClick={() => setSelectedView("api-keys")}
-        >
-          API Keys
-        </button>
-        <button
           data-selected={selectedView === "sessions"}
           onClick={() => setSelectedView("sessions")}
         >
           Sessions
+        </button>
+        <button
+          data-selected={selectedView === "api-keys"}
+          onClick={() => setSelectedView("api-keys")}
+        >
+          API Keys
         </button>
       </div>
       <div className="view-container">
@@ -196,13 +196,13 @@ function APIKeysView({
 function SessionsView({ sessions }: SessionsViewProps) {
   function copyCode() {
     const code = `const config = {
-      headers: {
-        "X-API-KEY": "YOUR_API_KEY",
-      },
-    }
-    const url = "https://id-server.holonym.io/sessions/";
-    const resp = await axios.post(url, {}, config);
-    const { sessionId } = resp.data;`;
+  headers: {
+    "X-API-KEY": "YOUR_API_KEY",
+  },
+}
+const url = "https://id-server.holonym.io/sessions/";
+const resp = await axios.post(url, {}, config);
+const { sessionId } = resp.data;`;
     navigator.clipboard
       .writeText(code ?? "")
       .then(() => {
@@ -274,8 +274,8 @@ function SessionsView({ sessions }: SessionsViewProps) {
         <thead>
           <tr>
             <th>Session ID</th>
-            <th>Created At</th>
-            <th>Consumed At</th>
+            <th>Created at</th>
+            <th>Consumed at</th>
           </tr>
         </thead>
         <tbody>
