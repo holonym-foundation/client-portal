@@ -44,7 +44,7 @@ function LoginForm({ onLogin }: LoginFormProps) {
   return (
     <>
       <div>
-        <h2>Holonym Client Portal</h2>
+        <h2 className="font-clover-medium">Client Portal</h2>
       </div>
       <form className="login-form" onSubmit={handleSubmit}>
         <div className="form-group">

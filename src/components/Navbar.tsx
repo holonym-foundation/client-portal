@@ -18,7 +18,7 @@ function Navbar() {
       <div style={{ position: "absolute", top: "5" }}>
         {isAdmin ? (
           <Link href="/admin">
-            <p className="link">Home</p>
+            <p className="text-blue-600 hover:underline hover:cursor-pointer">Home</p>
           </Link>
         ) : null}
       </div>

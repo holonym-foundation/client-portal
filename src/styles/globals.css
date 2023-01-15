@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   --max-width: 1100px;
   --border-radius: 12px;
@@ -76,11 +80,6 @@ html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
-  font-family: sans-serif;
-}
-
-body {
-  color: rgb(var(--foreground-rgb));
 }
 
 a {
@@ -94,14 +93,14 @@ a {
   }
 }
 
-.site-container {
+/* .site-container {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
   padding: 4rem;
   min-height: 100vh;
-}
+} */
 
 .login-form {
   display: flex;
@@ -154,15 +153,6 @@ label {
   background-color: #0064e6;
   box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.08);
 }
-/* General styles for the page container */
-.home-page-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 2rem;
-  min-width: fit-content;
-  width: 800px;
-}
 
 /* Styles for the menu container */
 .menu-container {
@@ -202,124 +192,28 @@ label {
   width: 100%;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 2rem;
-  border-spacing: 0;
-}
-
-thead {
-  background-color: #f5f5f5;
-}
-
-td,
-th {
-  padding: 1rem;
-  text-align: left;
-  border-bottom: 1px solid #e5e5e5;
-}
-
-th {
-  font-weight: 600;
-}
-
-/* Additional styles for the API Keys view */
-.api-keys-view h1 {
-  font-size: 2rem;
-  margin-bottom: 2rem;
-}
-
-/* Additional styles for the Sessions view */
-.sessions-view h1 {
-  font-size: 2rem;
-  margin-bottom: 2rem;
-}
-.sessions-view p {
-  font-size: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.btn-large-quiet {
-  width: 100%;
-  padding: 0.75rem 2rem;
-  background-color: #fafaff;
-  border: 1px solid #e5e5e5;
-  border-radius: 4px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s ease-in-out;
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08);
-}
-
-.btn-large-quiet:hover {
-  background-color: #f5f5f5;
-  box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.08);
-}
-
-.code-block {
-  font-family: "Source Code Pro", monospace;
-  background-color: #2d2d2d;
-  color: #f8f8f2;
-  padding: 15px;
-  border-radius: 5px;
-  overflow: auto;
-  line-height: 1.5;
-}
-
 code {
   font-size: 12px;
 }
 
-/* pre {
-  margin: 0;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-} */
-
-.language-javascript {
-  color: #fff;
-}
-
-.code-header-title {
-  font-size: 1.2em;
+@font-face {
+  font-family: "Clover Semibold";
+  src: url("./fonts/CloverDisplay-SemiBold.otf") format("opentype");
   font-weight: 600;
-  color: #4183c4;
+  font-style: normal;
+  font-display: swap;
 }
-
-.copy-btn {
-  background-color: #4183c4;
-  color: #fff;
-  padding: 5px 10px;
-  font-size: 0.8em;
-  border-radius: 3px;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
-  display: flex;
-  align-self: flex-end;
+@font-face {
+  font-family: "Clover Regular";
+  src: url("./fonts/CloverDisplay-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
 }
-
-.copy-btn:hover {
-  background-color: #357ae8;
-}
-
-.copy-btn:active {
-  background-color: #2b669a;
-}
-
-.link {
-  color: #007aff;
-  text-decoration: none;
-  cursor: pointer;
-  transition: color 0.2s ease-in-out;
-}
-
-.link:hover {
-  cursor: pointer;
-  text-decoration: underline;
+@font-face {
+  font-family: "Clover Medium";
+  src: url("./fonts/CloverDisplay-Medium.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
 }

@@ -5,7 +5,7 @@ import Navbar from "../components/Navbar";
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
-      <div className="site-container">
+      <div className="min-h-screen bg-page-bg text-white">
         <Navbar />
         <Component {...pageProps} />
       </div>

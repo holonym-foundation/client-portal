@@ -2,7 +2,7 @@ import Head from "next/head";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import LoginForm from "../components/LoginForm";
-import ClientHome from "../components/ClientHome";
+import ClientHome from "../components/client/ClientHome";
 
 export default function Index() {
   const [username, setUsername] = useState<string>("");
@@ -28,19 +28,7 @@ export default function Index() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         {/* <link rel="icon" href="/favicon.ico" /> */}
       </Head>
-      <div>
-        {username ? (
-          <div>
-            <h1>Welcome, {username}</h1>
-            {/* <div>
-              <h2>Sessions</h2>
-            </div> */}
-            <ClientHome />
-          </div>
-        ) : (
-          <LoginForm onLogin={setUsername} />
-        )}
-      </div>
+      <div>{username ? <ClientHome /> : <LoginForm onLogin={setUsername} />}</div>
     </>
   );
 }
