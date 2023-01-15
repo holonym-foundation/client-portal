@@ -96,103 +96,71 @@ export default function AdminHome() {
         <LoginForm onLogin={() => setLoggedIn(true)} />
       ) : (
         <>
-          <div className="header fixed w-full min-h-min h-10 top-0 z-0 pl-44 bg-page-bg shadow-sm shadow-holo-blue">
-            {/* <h2 className="font-clover-medium text-card-bg">Client Portal</h2> */}
-            {/* TODO: Add sign out button that displays on the far right of the screen in this div */}
-          </div>
-          <div className="fixed min-w-min w-36 h-screen z-10 bg-card-bg p-4 shadow-sm shadow-holo-blue">
-            <Image src={HolonymLogo} alt="Holonym Logo" width={200} height={200} />
-            {/* <ul className="list-none flex flex-col gap-4 text-lg pt-24">
-            <li>
-              <button
-                className={sessionsBtnClasses}
-                data-selected={selectedView === "sessions"}
-                onClick={() => setSelectedView("sessions")}
-              >
-                Sessions
-              </button>
-            </li>
-            <li>
-              <button
-                className={apiKeysBtnClasses}
-                data-selected={selectedView === "api-keys"}
-                onClick={() => setSelectedView("api-keys")}
-              >
-                API Keys
-              </button>
-            </li>
-          </ul> */}
-          </div>
-          <div className="ml-44 mr-10 py-10">
-            <h1 className="font-clover-medium text-3xl py-6">Admin view</h1>
-            <div>
-              <div className="leading-9">
-                <h2 className="font-clover-medium text-2xl">Sessions overview</h2>
-                <p className="text-lg">Total sessions: {sessionsOverview?.total}</p>
-              </div>
-              <table className="w-full border-collapse mt-8 border-spacing-0">
-                <thead className="bg-card-bg">
-                  <tr>
-                    <th className="p-4 text-left border-b-2 border-gray-900">
-                      Username
-                    </th>
-                    <th className="p-4 text-left border-b-2 border-gray-900">
-                      Client ID
-                    </th>
-                    <th className="p-4 text-left border-b-2 border-gray-900">
-                      Total sessions
-                    </th>
-                    <th className="p-4 text-left border-b-2 border-gray-900">
-                      Num sessions (
-                      {new Date(subMonths(new Date(), 1)).toLocaleString("default", {
-                        month: "short",
-                      })}{" "}
-                      {new Date(subMonths(new Date(), 1)).toString().split(" ")[3]})
-                    </th>
-                    <th className="p-4 text-left border-b-2 border-gray-900">
-                      Num sessions (
-                      {new Date().toLocaleString("default", { month: "short" })}{" "}
-                      {new Date().toString().split(" ")[3]})
-                    </th>
-                    <th className="p-4 text-left border-b-2 border-gray-900"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {sessionsOverview
-                    ? sessionsOverview?.totalByClientId?.map(
-                        (sessionMetadata: any) => (
-                          <tr key={sessionMetadata.clientId}>
-                            <td className="p-4 text-left border-b-2 border-gray-900">
-                              {sessionMetadata.username}
-                            </td>
-                            <td className="p-4 text-left border-b-2 border-gray-900">
-                              {sessionMetadata.clientId}
-                            </td>
-                            <td className="p-4 text-left border-b-2 border-gray-900">
-                              {sessionMetadata.total}
-                            </td>
-                            <td className="p-4 text-left border-b-2 border-gray-900">
-                              {sessionMetadata.totalLastMonth}
-                            </td>
-                            <td className="p-4 text-left border-b-2 border-gray-900">
-                              {sessionMetadata.totalThisMonth}
-                            </td>
-                            <td className="p-4 text-left border-b-2 border-gray-900">
-                              <Link
-                                href={`/admin/clients/${sessionMetadata.clientId}`}
-                              >
-                                <p className="text-blue-600 hover:underline hover:cursor-pointer">
-                                  View details
-                                </p>
-                              </Link>
-                            </td>
-                          </tr>
-                        )
-                      )
-                    : null}
-                </tbody>
-              </table>
+          <h1 className="font-clover-medium text-3xl py-6">
+            Admin View - Sessions Overview
+          </h1>
+          <div>
+            <div className="leading-9">
+              <p className="text-lg">Total sessions: {sessionsOverview?.total}</p>
             </div>
+            <table className="w-full border-collapse mt-8 border-spacing-0">
+              <thead className="bg-card-bg">
+                <tr>
+                  <th className="p-4 text-left border-b-2 border-gray-900">
+                    Username
+                  </th>
+                  <th className="p-4 text-left border-b-2 border-gray-900">
+                    Client ID
+                  </th>
+                  <th className="p-4 text-left border-b-2 border-gray-900">
+                    Total sessions
+                  </th>
+                  <th className="p-4 text-left border-b-2 border-gray-900">
+                    Num sessions (
+                    {new Date(subMonths(new Date(), 1)).toLocaleString("default", {
+                      month: "short",
+                    })}{" "}
+                    {new Date(subMonths(new Date(), 1)).toString().split(" ")[3]})
+                  </th>
+                  <th className="p-4 text-left border-b-2 border-gray-900">
+                    Num sessions (
+                    {new Date().toLocaleString("default", { month: "short" })}{" "}
+                    {new Date().toString().split(" ")[3]})
+                  </th>
+                  <th className="p-4 text-left border-b-2 border-gray-900"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {sessionsOverview
+                  ? sessionsOverview?.totalByClientId?.map((sessionMetadata: any) => (
+                      <tr key={sessionMetadata.clientId}>
+                        <td className="p-4 text-left border-b-2 border-gray-900">
+                          {sessionMetadata.username}
+                        </td>
+                        <td className="p-4 text-left border-b-2 border-gray-900">
+                          {sessionMetadata.clientId}
+                        </td>
+                        <td className="p-4 text-left border-b-2 border-gray-900">
+                          {sessionMetadata.total}
+                        </td>
+                        <td className="p-4 text-left border-b-2 border-gray-900">
+                          {sessionMetadata.totalLastMonth}
+                        </td>
+                        <td className="p-4 text-left border-b-2 border-gray-900">
+                          {sessionMetadata.totalThisMonth}
+                        </td>
+                        <td className="p-4 text-left border-b-2 border-gray-900">
+                          <Link href={`/admin/clients/${sessionMetadata.clientId}`}>
+                            <p className="text-blue-400 hover:underline hover:cursor-pointer">
+                              View details
+                            </p>
+                          </Link>
+                        </td>
+                      </tr>
+                    ))
+                  : null}
+              </tbody>
+            </table>
           </div>
         </>
       )}

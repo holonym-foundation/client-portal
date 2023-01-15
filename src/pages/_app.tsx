@@ -7,7 +7,9 @@ export default function App({ Component, pageProps }: AppProps) {
     <>
       <div className="min-h-screen bg-page-bg text-white">
         <Navbar />
-        <Component {...pageProps} />
+        <div className="ml-44 mr-10 py-10">
+          <Component {...pageProps} />
+        </div>
       </div>
     </>
   );
