@@ -3,17 +3,25 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import classNames from "classnames";
-import HolonymLogo from "../img/Holonym-Logo-W.png";
 import { useSessionStorage } from "usehooks-ts";
+import HolonymLogo from "../img/Holonym-Logo-W.png";
 
 // TODO: Separate this component into an admin navbar component and a client navbar component
 
 function Navbar() {
   const router = useRouter();
   const [isAdmin, setIsAdmin] = useSessionStorage<boolean>("isAdmin", false);
+  const [adminLoggedIn, setAdminLoggedIn] = useSessionStorage<boolean>(
+    "adminLoggedIn",
+    false
+  );
   const [adminSelectedView, setAdminSelectedView] = useSessionStorage(
     "adminSelectedView",
     "home"
+  );
+  const [clientLoggedIn, setClientLoggedIn] = useSessionStorage<boolean>(
+    "clientLoggedIn",
+    false
   );
   const [clientSelectedView, setClientSelectedView] = useSessionStorage(
     "clientSelectedView",
@@ -36,6 +44,19 @@ function Navbar() {
     }
   }, [router.pathname]);
 
+  useEffect(() => {
+    if (localStorage.getItem("apiKey")) {
+      setAdminLoggedIn(true);
+    } else {
+      setAdminLoggedIn(false);
+    }
+    if (localStorage.getItem("username") && localStorage.getItem("password")) {
+      setClientLoggedIn(true);
+    } else {
+      setClientLoggedIn(false);
+    }
+  }, []);
+
   const adminHomeBtnClasses = classNames({
     "cursor-pointer border-b-2 hover:border-holo-blue ease-in-out duration-200": true,
     "border-holo-blue": adminSelectedView === "home",
@@ -54,14 +75,24 @@ function Navbar() {
     "border-card-bg": clientSelectedView !== "api-keys",
   });
 
+  console.log("isAdmin", isAdmin);
+  console.log("adminLoggedIn", adminLoggedIn);
+
   return (
     <>
       <div style={{ position: "absolute", top: "5" }}>
-        {isAdmin ? (
+        {isAdmin && adminLoggedIn ? (
           <>
-            <div className="header fixed w-full min-h-min h-10 top-0 z-0 pl-44 bg-page-bg shadow-sm shadow-holo-blue">
-              {/* <h2 className="font-clover-medium text-card-bg">Client Portal</h2> */}
-              {/* TODO: Add sign out button that displays on the far right of the screen in this div */}
+            <div className="fixed w-full min-h-min h-10 top-0 z-0 pl-44 flex bg-page-bg shadow-sm shadow-holo-blue">
+              <button
+                className="ml-auto mr-10 hover:text-blue-400 hover:cursor"
+                onClick={() => {
+                  localStorage.removeItem("apiKey");
+                  setAdminLoggedIn(false);
+                }}
+              >
+                Sign out
+              </button>
             </div>
             <div className="fixed min-w-min w-36 h-screen z-10 bg-card-bg p-4 shadow-sm shadow-holo-blue">
               <Image src={HolonymLogo} alt="Holonym Logo" width={200} height={200} />
@@ -77,11 +108,19 @@ function Navbar() {
               </ul>
             </div>
           </>
-        ) : (
+        ) : clientLoggedIn ? (
           <>
-            <div className="header fixed w-full min-h-min h-10 top-0 z-0 pl-44 bg-page-bg shadow-sm shadow-holo-blue">
-              {/* <h2 className="font-clover-medium text-card-bg">Client Portal</h2> */}
-              {/* TODO: Add sign out button that displays on the far right of the screen in this div */}
+            <div className="fixed w-full min-h-min h-10 top-0 z-0 pl-44 flex bg-page-bg shadow-sm shadow-holo-blue">
+              <button
+                className="ml-auto mr-10 hover:text-blue-400 hover:cursor"
+                onClick={() => {
+                  localStorage.removeItem("username");
+                  localStorage.removeItem("password");
+                  setClientLoggedIn(false);
+                }}
+              >
+                Sign out
+              </button>
             </div>
             <div className="fixed min-w-min w-36 h-screen z-10 bg-card-bg p-4 shadow-sm shadow-holo-blue">
               <Image src={HolonymLogo} alt="Holonym Logo" width={200} height={200} />
@@ -109,7 +148,7 @@ function Navbar() {
               </ul>
             </div>
           </>
-        )}
+        ) : null}
       </div>
     </>
   );

@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { subMonths } from "date-fns";
+import { useSessionStorage } from "usehooks-ts";
 import HolonymLogo from "../../img/Holonym-Logo-W.png";
 import { idServerUrl } from "../../constants/misc";
 
@@ -41,41 +42,49 @@ function LoginForm({ onLogin }: LoginFormProps) {
   }
 
   return (
-    <>
-      <div>
-        <h2 className="font-clover-medium">Client Portal - Admin Login</h2>
+    <div className="flex">
+      <div className="fixed absolute top-0 p-4">
+        <Image src={HolonymLogo} alt="Holonym Logo" width={200} height={200} />
       </div>
-      <form className="login-form" onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="apiKey">API Key</label>
-          <input
-            type="password"
-            id="password"
-            name="apiKey"
-            className="form-input"
-            value={formData.apiKey}
-            onChange={handleInputChange}
-          />
+      <div className="m-auto mt-10">
+        <div>
+          <h2 className="font-clover-medium text-3xl">Client Portal - Admin Login</h2>
         </div>
-        <div className="form-group" style={{ textAlign: "right" }}>
-          <button className="btn btn-primary">Submit</button>
-        </div>
-      </form>
-    </>
+        <form className="login-form" onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="apiKey">API Key</label>
+            <input
+              type="password"
+              id="password"
+              name="apiKey"
+              className="form-input"
+              value={formData.apiKey}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="form-group text-right">
+            <button className="btn btn-primary">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 }
 
 export default function AdminHome() {
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [adminLoggedIn, setAdminLoggedIn] = useSessionStorage<boolean>(
+    "adminLoggedIn",
+    false
+  );
   const [sessionsOverview, setSessionsOverview] = useState<any>(null);
 
   useEffect(() => {
     const apiKey = localStorage.getItem("apiKey");
-    if (apiKey) setLoggedIn(true);
+    if (apiKey) setAdminLoggedIn(true);
   }, []);
 
   useEffect(() => {
-    if (!loggedIn) return;
+    if (!adminLoggedIn) return;
     const apiKey = localStorage.getItem("apiKey");
     if (!apiKey) return;
     (async () => {
@@ -88,12 +97,12 @@ export default function AdminHome() {
       console.log(data);
       setSessionsOverview(data);
     })();
-  }, [loggedIn]);
+  }, [adminLoggedIn]);
 
   return (
     <div className="text-white">
-      {!loggedIn ? (
-        <LoginForm onLogin={() => setLoggedIn(true)} />
+      {!adminLoggedIn ? (
+        <LoginForm onLogin={() => setAdminLoggedIn(true)} />
       ) : (
         <>
           <h1 className="font-clover-medium text-3xl py-6">
