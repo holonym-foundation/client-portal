@@ -22,7 +22,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <>
-      <div className="min-h-screen bg-page-bg text-white">
+      <div className="min-h-screen bg-page-bg text-black">
         <Navbar />
         <div className={mainClasses}>
           <Component {...pageProps} />

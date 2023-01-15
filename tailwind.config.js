@@ -9,8 +9,14 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        "page-bg": "#01010c",
-        "card-bg": "#060612",
+        // dark
+        // "page-bg": "#01010c",
+        // "card-bg": "#060612",
+        // "holo-orange": "#fdc094",
+        // "holo-blue": "#5e72eb",
+        // light
+        "page-bg": "#fff",
+        "card-bg": "#f7f7f7",
         "holo-orange": "#fdc094",
         "holo-blue": "#5e72eb",
       },

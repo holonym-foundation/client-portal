@@ -3,7 +3,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { subMonths } from "date-fns";
 import { useSessionStorage } from "usehooks-ts";
-import HolonymLogo from "../../img/Holonym-Logo-W.png";
+import HolonymLogo from "../../img/Holonym-Logo-B.png";
 import { idServerUrl } from "../../constants/misc";
 
 interface FormData {
@@ -100,7 +100,7 @@ export default function AdminHome() {
   }, [adminLoggedIn]);
 
   return (
-    <div className="text-white">
+    <div>
       {!adminLoggedIn ? (
         <LoginForm onLogin={() => setAdminLoggedIn(true)} />
       ) : (
@@ -115,52 +115,52 @@ export default function AdminHome() {
             <table className="w-full border-collapse mt-8 border-spacing-0">
               <thead className="bg-card-bg">
                 <tr>
-                  <th className="p-4 text-left border-b-2 border-gray-900">
+                  <th className="p-4 text-left border-b-2 border-gray-200">
                     Username
                   </th>
-                  <th className="p-4 text-left border-b-2 border-gray-900">
+                  <th className="p-4 text-left border-b-2 border-gray-200">
                     Client ID
                   </th>
-                  <th className="p-4 text-left border-b-2 border-gray-900">
+                  <th className="p-4 text-left border-b-2 border-gray-200">
                     Total sessions
                   </th>
-                  <th className="p-4 text-left border-b-2 border-gray-900">
+                  <th className="p-4 text-left border-b-2 border-gray-200">
                     Num sessions (
                     {new Date(subMonths(new Date(), 1)).toLocaleString("default", {
                       month: "short",
                     })}{" "}
                     {new Date(subMonths(new Date(), 1)).toString().split(" ")[3]})
                   </th>
-                  <th className="p-4 text-left border-b-2 border-gray-900">
+                  <th className="p-4 text-left border-b-2 border-gray-200">
                     Num sessions (
                     {new Date().toLocaleString("default", { month: "short" })}{" "}
                     {new Date().toString().split(" ")[3]})
                   </th>
-                  <th className="p-4 text-left border-b-2 border-gray-900"></th>
+                  <th className="p-4 text-left border-b-2 border-gray-200"></th>
                 </tr>
               </thead>
               <tbody>
                 {sessionsOverview
                   ? sessionsOverview?.totalByClientId?.map((sessionMetadata: any) => (
                       <tr key={sessionMetadata.clientId}>
-                        <td className="p-4 text-left border-b-2 border-gray-900">
+                        <td className="p-4 text-left border-b-2 border-gray-200">
                           {sessionMetadata.username}
                         </td>
-                        <td className="p-4 text-left border-b-2 border-gray-900">
+                        <td className="p-4 text-left border-b-2 border-gray-200">
                           {sessionMetadata.clientId}
                         </td>
-                        <td className="p-4 text-left border-b-2 border-gray-900">
+                        <td className="p-4 text-left border-b-2 border-gray-200">
                           {sessionMetadata.total}
                         </td>
-                        <td className="p-4 text-left border-b-2 border-gray-900">
+                        <td className="p-4 text-left border-b-2 border-gray-200">
                           {sessionMetadata.totalLastMonth}
                         </td>
-                        <td className="p-4 text-left border-b-2 border-gray-900">
+                        <td className="p-4 text-left border-b-2 border-gray-200">
                           {sessionMetadata.totalThisMonth}
                         </td>
-                        <td className="p-4 text-left border-b-2 border-gray-900">
+                        <td className="p-4 text-left border-b-2 border-gray-200">
                           <Link href={`/admin/clients/${sessionMetadata.clientId}`}>
-                            <p className="text-blue-400 hover:underline hover:cursor-pointer">
+                            <p className="text-blue-600 hover:underline hover:cursor-pointer">
                               View details
                             </p>
                           </Link>

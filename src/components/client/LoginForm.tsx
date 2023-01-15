@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Image from "next/image";
-import HolonymLogo from "../../img/Holonym-Logo-W.png";
+import HolonymLogo from "../../img/Holonym-Logo-B.png";
 import { idServerUrl } from "../../constants/misc";
 
 interface FormData {

@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useSessionStorage } from "usehooks-ts";
-import HolonymLogo from "../../../../img/Holonym-Logo-W.png";
+import HolonymLogo from "../../../../img/Holonym-Logo-B.png";
 import { idServerUrl } from "../../../../constants/misc";
 
 export default function ClientSessions() {
@@ -55,13 +55,13 @@ export default function ClientSessions() {
           <table className="w-full border-collapse mt-8 border-spacing-0">
             <thead className="bg-card-bg">
               <tr>
-                <th className="p-4 text-left border-b-2 border-gray-900">
+                <th className="p-4 text-left border-b-2 border-gray-200">
                   Session ID
                 </th>
-                <th className="p-4 text-left border-b-2 border-gray-900">
+                <th className="p-4 text-left border-b-2 border-gray-200">
                   Created at
                 </th>
-                <th className="p-4 text-left border-b-2 border-gray-900">
+                <th className="p-4 text-left border-b-2 border-gray-200">
                   Consumed at
                 </th>
               </tr>
@@ -70,15 +70,15 @@ export default function ClientSessions() {
               {sessions
                 ? sessions?.map((session: any) => (
                     <tr key={session.sessionId}>
-                      <td className="p-4 text-left border-b-2 border-gray-900">
+                      <td className="p-4 text-left border-b-2 border-gray-200">
                         {session.sessionId}
                       </td>
-                      <td className="p-4 text-left border-b-2 border-gray-900">
+                      <td className="p-4 text-left border-b-2 border-gray-200">
                         {session?.createdAt
                           ? new Date(session.createdAt).toISOString().split("T")[0]
                           : null}
                       </td>
-                      <td className="p-4 text-left border-b-2 border-gray-900">
+                      <td className="p-4 text-left border-b-2 border-gray-200">
                         {session?.consumedAt
                           ? new Date(session.consumedAt).toISOString().split("T")[0]
                           : null}

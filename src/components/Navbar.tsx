@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import classNames from "classnames";
 import { useSessionStorage } from "usehooks-ts";
-import HolonymLogo from "../img/Holonym-Logo-W.png";
+import HolonymLogo from "../img/Holonym-Logo-B.png";
 
 // TODO: Separate this component into an admin navbar component and a client navbar component
 
@@ -75,9 +75,6 @@ function Navbar() {
     "border-card-bg": clientSelectedView !== "api-keys",
   });
 
-  console.log("isAdmin", isAdmin);
-  console.log("adminLoggedIn", adminLoggedIn);
-
   return (
     <>
       <div style={{ position: "absolute", top: "5" }}>
@@ -85,7 +82,7 @@ function Navbar() {
           <>
             <div className="fixed w-full min-h-min h-10 top-0 z-0 pl-44 flex bg-page-bg shadow-sm shadow-holo-blue">
               <button
-                className="ml-auto mr-10 hover:text-blue-400 hover:cursor"
+                className="ml-auto mr-10 hover:text-blue-600 hover:cursor"
                 onClick={() => {
                   localStorage.removeItem("apiKey");
                   setAdminLoggedIn(false);
@@ -112,7 +109,7 @@ function Navbar() {
           <>
             <div className="fixed w-full min-h-min h-10 top-0 z-0 pl-44 flex bg-page-bg shadow-sm shadow-holo-blue">
               <button
-                className="ml-auto mr-10 hover:text-blue-400 hover:cursor"
+                className="ml-auto mr-10 hover:text-blue-600 hover:cursor"
                 onClick={() => {
                   localStorage.removeItem("username");
                   localStorage.removeItem("password");
