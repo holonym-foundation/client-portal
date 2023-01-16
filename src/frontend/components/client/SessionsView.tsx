@@ -6,6 +6,7 @@ interface SessionsViewProps {
 
 function SessionsView({ sessions }: SessionsViewProps) {
   function copyCode() {
+    // TODO: Update url
     const code = `const config = {
     headers: {
       "X-API-KEY": "YOUR_API_KEY",
@@ -59,7 +60,8 @@ function SessionsView({ sessions }: SessionsViewProps) {
 5. }`}
               </code>
               <br />
-              <code>{`6. const url = "https://id-server.holonym.io/sessions/";`}</code>
+              {/* TODO: Update url */}
+              <code>{`6. const url = "https://client.holonym.io/sessions/";`}</code>
               <br />
               <code>{`7. const resp = await axios.post(url, {}, config);`}</code>
               <br />
