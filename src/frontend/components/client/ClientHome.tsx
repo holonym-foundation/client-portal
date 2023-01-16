@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import type { APIKey, ProofSession } from "../../types/types";
-import { idServerUrl } from "../../constants/misc";
+import type { APIKey, ProofSession } from "../../../types/types";
+import { thisUrl } from "../../../frontend/constants/misc";
 import { useSessionStorage } from "usehooks-ts";
 import SessionsView from "./SessionsView";
 import APIKeysView from "./APIKeysView";
@@ -16,7 +16,7 @@ export default function ClientHome() {
 
   useEffect(() => {
     (async () => {
-      const resp = await fetch(`${idServerUrl}/proof-clients/api-keys`, {
+      const resp = await fetch(`${thisUrl}/api/clients/keys`, {
         method: "GET",
         headers: {
           Authorization:
@@ -30,7 +30,7 @@ export default function ClientHome() {
       setApiKeys(data.apiKeys);
     })();
     (async () => {
-      const resp = await fetch(`${idServerUrl}/proof-clients/sessions`, {
+      const resp = await fetch(`${thisUrl}/api/clients/sessions`, {
         method: "GET",
         headers: {
           Authorization:
@@ -47,7 +47,7 @@ export default function ClientHome() {
   }, []);
 
   async function handleClickAddAPIKey() {
-    const resp = await fetch(`${idServerUrl}/proof-clients/api-keys`, {
+    const resp = await fetch(`${thisUrl}/api/clients/keys`, {
       method: "POST",
       headers: {
         Authorization:
@@ -69,7 +69,7 @@ export default function ClientHome() {
       `Are you sure you want to revoke the following API key?\n${apiKey}`
     );
     if (!confirmation) return;
-    const resp = await fetch(`${idServerUrl}/proof-clients/api-keys/${apiKey}`, {
+    const resp = await fetch(`${thisUrl}/api/clients/keys/${apiKey}`, {
       method: "DELETE",
       headers: {
         Authorization:

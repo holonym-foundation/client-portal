@@ -1,4 +1,4 @@
-import type { ProofSession } from "../../types/types";
+import type { ProofSession } from "../../../types/types";
 
 interface SessionsViewProps {
   sessions: ProofSession[];

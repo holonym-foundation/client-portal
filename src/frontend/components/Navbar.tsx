@@ -77,7 +77,7 @@ function Navbar() {
 
   return (
     <>
-      <div style={{ position: "absolute", top: "5" }}>
+      <div>
         {isAdmin && adminLoggedIn ? (
           <>
             <div className="fixed w-full min-h-min h-10 top-0 z-0 pl-44 flex bg-page-bg shadow-sm shadow-holo-blue">
@@ -86,6 +86,7 @@ function Navbar() {
                 onClick={() => {
                   localStorage.removeItem("apiKey");
                   setAdminLoggedIn(false);
+                  router.push("/admin");
                 }}
               >
                 Sign out

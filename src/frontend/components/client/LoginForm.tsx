@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import HolonymLogo from "../../img/Holonym-Logo-B.png";
-import { idServerUrl } from "../../constants/misc";
+import { thisUrl } from "../../../frontend/constants/misc";
 
 interface FormData {
   username: string;
@@ -20,7 +20,7 @@ function LoginForm({ onLogin }: LoginFormProps) {
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const resp = await fetch(`${idServerUrl}/proof-clients/auth`, {
+    const resp = await fetch(`${thisUrl}/api/clients/auth`, {
       method: "GET",
       headers: {
         Authorization:

@@ -1,8 +1,8 @@
-import "../styles/globals.css";
+import "../frontend/styles/globals.css";
 import type { AppProps } from "next/app";
 import classNames from "classnames";
 import { useSessionStorage } from "usehooks-ts";
-import Navbar from "../components/Navbar";
+import Navbar from "../frontend/components/Navbar";
 
 export default function App({ Component, pageProps }: AppProps) {
   const [adminLoggedIn, setAdminLoggedIn] = useSessionStorage<boolean>(

@@ -2,8 +2,8 @@ import Head from "next/head";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useSessionStorage } from "usehooks-ts";
-import LoginForm from "../components/client/LoginForm";
-import ClientHome from "../components/client/ClientHome";
+import LoginForm from "../frontend/components/client/LoginForm";
+import ClientHome from "../frontend/components/client/ClientHome";
 
 export default function Index() {
   const [clientLoggedIn, setClientLoggedIn] = useSessionStorage<boolean>(

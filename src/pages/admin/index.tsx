@@ -3,8 +3,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { subMonths } from "date-fns";
 import { useSessionStorage } from "usehooks-ts";
-import HolonymLogo from "../../img/Holonym-Logo-B.png";
-import { idServerUrl } from "../../constants/misc";
+import { thisUrl } from "../../frontend/constants/misc";
 
 interface FormData {
   apiKey: string;
@@ -21,7 +20,7 @@ function LoginForm({ onLogin }: LoginFormProps) {
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const resp = await fetch(`${idServerUrl}/admin/auth`, {
+    const resp = await fetch(`${thisUrl}/api/admin/auth`, {
       headers: {
         "X-API-KEY": formData.apiKey,
       },
@@ -43,9 +42,6 @@ function LoginForm({ onLogin }: LoginFormProps) {
 
   return (
     <div className="flex">
-      <div className="fixed absolute top-0 p-4">
-        <Image src={HolonymLogo} alt="Holonym Logo" width={200} height={200} />
-      </div>
       <div className="m-auto mt-10">
         <div>
           <h2 className="font-clover-medium text-3xl">Client Portal - Admin Login</h2>
@@ -88,7 +84,7 @@ export default function AdminHome() {
     const apiKey = localStorage.getItem("apiKey");
     if (!apiKey) return;
     (async () => {
-      const resp = await fetch(`${idServerUrl}/admin/sessions?overview=true`, {
+      const resp = await fetch(`${thisUrl}/api/admin/sessions?overview=true`, {
         headers: {
           "X-API-KEY": apiKey,
         },

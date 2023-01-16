@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useSessionStorage } from "usehooks-ts";
 import HolonymLogo from "../../../../img/Holonym-Logo-B.png";
-import { idServerUrl } from "../../../../constants/misc";
+import { thisUrl } from "../../../../frontend/constants/misc";
 
 export default function ClientSessions() {
   const router = useRouter();
@@ -20,7 +20,7 @@ export default function ClientSessions() {
     const apiKey = localStorage.getItem("apiKey");
     if (!apiKey) return;
     (async () => {
-      const resp = await fetch(`${idServerUrl}/admin/sessions?clientId=${clientId}`, {
+      const resp = await fetch(`${thisUrl}/api/admin/sessions?clientId=${clientId}`, {
         headers: {
           "X-API-KEY": apiKey,
         },
@@ -30,7 +30,7 @@ export default function ClientSessions() {
       setSessions(data);
     })();
     (async () => {
-      const resp = await fetch(`${idServerUrl}/admin/clients/${clientId}`, {
+      const resp = await fetch(`${thisUrl}/api/admin/clients/${clientId}`, {
         headers: {
           "X-API-KEY": apiKey,
         },

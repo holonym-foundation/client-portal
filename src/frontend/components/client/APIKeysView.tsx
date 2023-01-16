@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import type { APIKey } from "../../types/types";
+import type { APIKey } from "../../../types/types";
 
 interface APIKeysViewProps {
   apiKeys: APIKey[];
