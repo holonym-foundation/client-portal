@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { ProofSession } from "../../../backend/init.js";
-import { PROOF_SESSION_ACTIVE_DURATION } from "../../../backend/constants.js";
+import { ProofSession } from "../../../backend/init";
+import { PROOF_SESSION_ACTIVE_DURATION } from "../../../backend/constants";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   console.log("GET sessions/<sessionId>: Entered");

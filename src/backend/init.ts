@@ -46,8 +46,8 @@ async function initializeMongoDb() {
     try {
       const s3 = new AWS.S3({
         credentials: {
-          accessKeyId: process.env.AWS_ACCESS_KEY_ID as string,
-          secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
+          accessKeyId: process.env.ACCESS_KEY_ID_AWS as string,
+          secretAccessKey: process.env.SECRET_ACCESS_KEY_AWS as string,
         },
         region: "us-east-1",
       });

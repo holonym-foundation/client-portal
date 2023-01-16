@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { v4 as uuidV4 } from "uuid";
-import { ProofClient, ProofSession } from "../../../backend/init.js";
+import { ProofClient, ProofSession } from "../../../backend/init";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
   console.log("POST sessions/: Entered");
