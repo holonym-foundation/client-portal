@@ -12,7 +12,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<any>) 
   }
 
   if (apiKey != process.env.ADMIN_API_KEY) {
-    console.log("admin", process.env.ADMIN_API_KEY);
     console.log("GET /admin/auth: API key not valid");
     return res.status(401).json({ error: "API key not valid" });
   }
