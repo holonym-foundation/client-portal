@@ -63,7 +63,7 @@ async function initializeMongoDb() {
             if (getObjectErr) reject(getObjectErr);
             const bodyAsString = await data?.Body?.transformToString();
             fs.writeFile(
-              `${__dirname}/../../${process.env.MONGO_CERT_FILE_NAME}`,
+              `${__dirname}/${process.env.MONGO_CERT_FILE_NAME}`,
               bodyAsString as string,
               (writeFileErr) => {
                 console.log("entered writeFile cb");
@@ -90,7 +90,7 @@ async function initializeMongoDb() {
     const mongoConfig = {
       ssl: true,
       sslValidate: true,
-      sslCA: `${__dirname}/../../${process.env.MONGO_CERT_FILE_NAME}`,
+      sslCA: `${__dirname}/${process.env.MONGO_CERT_FILE_NAME}`,
     };
     await mongoose.connect(
       process.env.MONGO_DB_CONNECTION_STR as string,
