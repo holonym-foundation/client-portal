@@ -1,47 +1,18 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import bcrypt from "bcryptjs";
 import { v4 as uuidV4 } from "uuid";
-import { initializeMongoose } from "../../../../backend/database";
-import { ProofClient } from "../../../../backend/models";
-import { SALT, MAX_CLIENT_API_KEYS } from "../../../../backend/constants";
+import { clientBasicAuth } from "../../../../backend/utils";
+import { MAX_CLIENT_API_KEYS } from "../../../../backend/constants";
 import type { APIKey } from "../../../../types/types";
 
 async function handlePost(req: NextApiRequest, res: NextApiResponse<any>) {
   console.log("POST clients/keys/: Entered");
-  const auth = req.headers["authorization"];
-
-  if (!auth) {
-    console.log("POST clients/keys/: Authorization header not provided");
-    return res.status(400).json({ error: "Authorization header not provided" });
+  const authResult = await clientBasicAuth(req);
+  if (authResult?.error) {
+    console.log(`POST clients/keys/: ${authResult.error}`);
+    return res.status(401).json({ error: authResult.error });
   }
 
-  const [type, credentials] = auth.split(" ");
-  if (type !== "Basic") {
-    console.log("POST clients/keys/: Authorization type not supported");
-    return res.status(400).json({ error: "Authorization type not supported" });
-  }
-
-  const decodedCredentials = Buffer.from(credentials, "base64").toString("ascii");
-  const [username, password] = decodedCredentials.split(":");
-
-  await initializeMongoose();
-
-  const client = await ProofClient.findOne({
-    username,
-  }).exec();
-  if (!client) {
-    console.log("POST clients/keys/: Client not found");
-    return res.status(401).json({ error: "Client not found" });
-  }
-
-  const isPasswordCorrect = await bcrypt.compare(
-    password,
-    client.passwordDigest as string
-  );
-  if (!isPasswordCorrect) {
-    console.log("GET clients/auth: Password not correct");
-    return res.status(401).json({ error: "Password not correct" });
-  }
+  const client = authResult.client;
 
   if (
     client.apiKeys.filter((key: APIKey) => !key.active).length >= MAX_CLIENT_API_KEYS
@@ -65,40 +36,13 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse<any>) {
 
 async function handleGet(req: NextApiRequest, res: NextApiResponse) {
   console.log("GET clients/keys/: Entered");
-  const auth = req.headers["authorization"];
-
-  if (!auth) {
-    console.log("GET clients/keys/: Authorization header not provided");
-    return res.status(400).json({ error: "Authorization header not provided" });
+  const authResult = await clientBasicAuth(req);
+  if (authResult?.error) {
+    console.log(`GET clients/keys/: ${authResult.error}`);
+    return res.status(401).json({ error: authResult.error });
   }
 
-  const [type, credentials] = auth.split(" ");
-  if (type !== "Basic") {
-    console.log("GET clients/keys/: Authorization type not supported");
-    return res.status(400).json({ error: "Authorization type not supported" });
-  }
-
-  const decodedCredentials = Buffer.from(credentials, "base64").toString("ascii");
-  const [username, password] = decodedCredentials.split(":");
-
-  await initializeMongoose();
-
-  const client = await ProofClient.findOne({
-    username,
-  }).exec();
-  if (!client) {
-    console.log("GET clients/keys/: Client not found");
-    return res.status(401).json({ error: "Client not found" });
-  }
-
-  const isPasswordCorrect = await bcrypt.compare(
-    password,
-    client.passwordDigest as string
-  );
-  if (!isPasswordCorrect) {
-    console.log("GET clients/auth: Password not correct");
-    return res.status(401).json({ error: "Password not correct" });
-  }
+  const client = authResult.client;
 
   console.log(`GET clients/keys/: Client ${client.username} found`);
   return res.status(200).json({ username: client.username, apiKeys: client.apiKeys });
