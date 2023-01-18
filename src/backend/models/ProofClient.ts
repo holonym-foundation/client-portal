@@ -19,7 +19,7 @@ const ProofClientSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  // passwordDigest == sha256(password + salt)
+  // passwordDigest == bcrypt.hash(password, salt)
   passwordDigest: {
     type: String,
     required: true,

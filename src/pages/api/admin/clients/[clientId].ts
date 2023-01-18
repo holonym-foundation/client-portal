@@ -1,7 +1,8 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import { startOfMonth, subMonths } from "date-fns";
-import { ProofClient, ProofSession } from "../../../../backend/init";
+import { initializeMongoose } from "../../../../backend/database";
+import { ProofClient, ProofSession } from "../../../../backend/models";
 import type { ProofClientDoc } from "../../../../types/types";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
@@ -19,6 +20,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   }
 
   const { clientId } = req.query;
+
+  await initializeMongoose();
 
   const result = await ProofClient.findOne({ clientId: clientId });
   const client: Partial<ProofClientDoc> | undefined = result?.toObject();

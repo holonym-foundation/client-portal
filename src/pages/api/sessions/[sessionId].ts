@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { ProofSession } from "../../../backend/init";
+import { initializeMongoose } from "../../../backend/database";
+import { ProofSession } from "../../../backend/models";
 import { PROOF_SESSION_ACTIVE_DURATION } from "../../../backend/constants";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -13,6 +14,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const ipAddr =
     (req.headers["x-forwarded-for"] as string) || req.socket.remoteAddress;
+
+  await initializeMongoose();
 
   const session = await ProofSession.findOne({ sessionId }).exec();
   if (!session) {

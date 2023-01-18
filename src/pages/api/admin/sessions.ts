@@ -2,11 +2,11 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import mongoose from "mongoose";
 import { startOfMonth, subMonths } from "date-fns";
-import { ProofClient, ProofSession } from "../../../backend/init";
+import { ProofClient, ProofSession } from "../../../backend/models";
+import { initializeMongoose } from "../../../backend/database";
 import type { ProofSessionDoc } from "../../../types/types";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
-  // TODO: Auth with NextAuth
   console.log("GET /admin/sessions: Entered");
   const apiKey = req.headers["x-api-key"];
 
@@ -19,6 +19,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     console.log("GET /admin/sessions: API key not valid");
     return res.status(401).json({ error: "API key not valid" });
   }
+
+  await initializeMongoose();
 
   if (req.query.overview === "true") {
     const firstOfThisMonth = startOfMonth(new Date()).setUTCHours(0, 0, 0, 0);

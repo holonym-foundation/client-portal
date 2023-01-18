@@ -1,12 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { createHash } from "crypto";
+import bcrypt from "bcryptjs";
 import { v4 as uuidV4 } from "uuid";
-import { ProofClient } from "../../../../backend/init";
+import { initializeMongoose } from "../../../../backend/database";
+import { ProofClient } from "../../../../backend/models";
 import { SALT, MAX_CLIENT_API_KEYS } from "../../../../backend/constants";
 import type { APIKey } from "../../../../types/types";
-
-const hash = (data: Buffer) =>
-  createHash("sha256").update(data).digest().toString("hex");
 
 async function handlePost(req: NextApiRequest, res: NextApiResponse<any>) {
   console.log("POST clients/keys/: Entered");
@@ -25,15 +23,24 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse<any>) {
 
   const decodedCredentials = Buffer.from(credentials, "base64").toString("ascii");
   const [username, password] = decodedCredentials.split(":");
-  const passwordDigest = hash(Buffer.from(password + SALT, "utf8"));
+
+  await initializeMongoose();
 
   const client = await ProofClient.findOne({
     username,
-    passwordDigest,
   }).exec();
   if (!client) {
     console.log("POST clients/keys/: Client not found");
     return res.status(401).json({ error: "Client not found" });
+  }
+
+  const isPasswordCorrect = await bcrypt.compare(
+    password,
+    client.passwordDigest as string
+  );
+  if (!isPasswordCorrect) {
+    console.log("GET clients/auth: Password not correct");
+    return res.status(401).json({ error: "Password not correct" });
   }
 
   if (
@@ -73,15 +80,24 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
 
   const decodedCredentials = Buffer.from(credentials, "base64").toString("ascii");
   const [username, password] = decodedCredentials.split(":");
-  const passwordDigest = hash(Buffer.from(password + SALT, "utf8"));
+
+  await initializeMongoose();
 
   const client = await ProofClient.findOne({
     username,
-    passwordDigest,
   }).exec();
   if (!client) {
     console.log("GET clients/keys/: Client not found");
     return res.status(401).json({ error: "Client not found" });
+  }
+
+  const isPasswordCorrect = await bcrypt.compare(
+    password,
+    client.passwordDigest as string
+  );
+  if (!isPasswordCorrect) {
+    console.log("GET clients/auth: Password not correct");
+    return res.status(401).json({ error: "Password not correct" });
   }
 
   console.log(`GET clients/keys/: Client ${client.username} found`);

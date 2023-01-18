@@ -1,27 +1,36 @@
 import fs from "fs";
-import { createHash } from "crypto";
-import axios from "axios";
-import { dirname } from "path";
-import { fileURLToPath } from "url";
 import mongoose from "mongoose";
 import * as AWS from "@aws-sdk/client-s3";
 import { GetObjectCommandOutput } from "@aws-sdk/client-s3";
+import bcrypt from "bcryptjs";
 import { SALT } from "./constants";
 import type { ProofClientModel, ProofSessionModel } from "../types/types";
 import { ProofClient, ProofSession } from "./models";
 import dotenv from "dotenv";
 dotenv.config();
 
-// const __dirname = dirname(fileURLToPath(import.meta.url));
+// Using global to maintain connection during Next.js hot reloads in dev
+// https://github.com/vercel/next.js/pull/17666
+global.mongoose = global?.mongoose ?? mongoose;
 
-if (process.env.NODE_ENV === "development") mongoose.set("debug", true);
+if (process.env.NODE_ENV === "development") {
+  global.mongoose.set("debug", true);
+  // TODO: Delete this log
+  console.log(
+    "connections length",
+    global.mongoose?.connection?.base?.connections?.length
+  );
+}
 
 async function initializeProofClient(ProofClient: ProofClientModel) {
+  await ProofClient.deleteOne({
+    clientId: "0",
+  }).exec();
   if (process.env.NODE_ENV === "development") {
-    const passwordDigest = createHash("sha256")
-      .update(Buffer.from(process.env.ADMIN_PASSWORD + SALT))
-      .digest()
-      .toString("hex");
+    const passwordDigest = await bcrypt.hash(
+      process.env.ADMIN_PASSWORD as string,
+      SALT
+    );
     const testClientData = {
       clientId: "0",
       name: "Holonym",
@@ -39,7 +48,14 @@ async function initializeProofClient(ProofClient: ProofClientModel) {
   }
 }
 
-async function initializeMongoDb() {
+async function initializeMongoose(): Promise<typeof mongoose> {
+  if (
+    global.mongoose.connection.readyState !== 0 &&
+    global.mongoose.connection.readyState !== 3
+  ) {
+    return global.mongoose;
+  }
+
   console.log("Initializing MongoDB connection...");
   if (process.env.NODE_ENV !== "development") {
     // Download certificate used for TLS connection
@@ -83,7 +99,7 @@ async function initializeMongoDb() {
       });
     } catch (err) {
       console.log("Unable to download certificate for MongoDB connection.", err);
-      return;
+      return global.mongoose;
     }
   }
 
@@ -94,24 +110,17 @@ async function initializeMongoDb() {
       // sslCA: `${__dirname}/${process.env.MONGO_CERT_FILE_NAME}`,
       sslCA: `./${process.env.MONGO_CERT_FILE_NAME}`,
     };
-    await mongoose.connect(
+    await global.mongoose.connect(
       process.env.MONGO_DB_CONNECTION_STR as string,
       process.env.NODE_ENV === "development" ? {} : mongoConfig
     );
     console.log("Connected to MongoDB database.");
   } catch (err) {
     console.log("Unable to connect to MongoDB database.", err);
-    return;
+    return global.mongoose;
   }
   await initializeProofClient(ProofClient);
-  return {
-    ProofClient,
-    ProofSession,
-  };
+  return global.mongoose;
 }
 
-initializeMongoDb().catch((err) => {
-  console.log("MongoDB initialization failed");
-});
-
-export { ProofClient, ProofSession };
+export { initializeMongoose };

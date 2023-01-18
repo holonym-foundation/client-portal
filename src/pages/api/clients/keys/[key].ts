@@ -1,11 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { createHash } from "crypto";
-import { ProofClient } from "../../../../backend/init";
+import bcrypt from "bcryptjs";
+import { initializeMongoose } from "../../../../backend/database";
+import { ProofClient } from "../../../../backend/models";
 import { SALT } from "../../../../backend/constants";
 import type { APIKey } from "../../../../types/types";
-
-const hash = (data: Buffer) =>
-  createHash("sha256").update(data).digest().toString("hex");
 
 async function handleDelete(req: NextApiRequest, res: NextApiResponse) {
   console.log("DELETE clients/keys/: Entered");
@@ -24,15 +22,24 @@ async function handleDelete(req: NextApiRequest, res: NextApiResponse) {
 
   const decodedCredentials = Buffer.from(credentials, "base64").toString("ascii");
   const [username, password] = decodedCredentials.split(":");
-  const passwordDigest = hash(Buffer.from(password + SALT, "utf8"));
+
+  await initializeMongoose();
 
   const client = await ProofClient.findOne({
     username,
-    passwordDigest,
   }).exec();
   if (!client) {
     console.log("DELETE clients/keys/: Client not found");
     return res.status(401).json({ error: "Client not found" });
+  }
+
+  const isPasswordCorrect = await bcrypt.compare(
+    password,
+    client.passwordDigest as string
+  );
+  if (!isPasswordCorrect) {
+    console.log("GET clients/auth: Password not correct");
+    return res.status(401).json({ error: "Password not correct" });
   }
 
   const { key } = req.query;

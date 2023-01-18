@@ -1,10 +1,13 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { v4 as uuidV4 } from "uuid";
-import { ProofClient, ProofSession } from "../../../backend/init";
+import { initializeMongoose } from "../../../backend/database";
+import { ProofClient, ProofSession } from "../../../backend/models";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
   console.log("POST sessions/: Entered");
   const apiKey = req.headers["x-api-key"];
+
+  await initializeMongoose();
 
   const client = await ProofClient.findOne({
     apiKeys: { $elemMatch: { key: apiKey, active: true } },

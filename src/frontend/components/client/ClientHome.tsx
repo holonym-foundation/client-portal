@@ -58,7 +58,7 @@ export default function ClientHome() {
       },
     });
     const data = await resp.json();
-    const newApiKeys = [...apiKeys, data.apiKey];
+    const newApiKeys = apiKeys ? [...apiKeys, data.apiKey] : [data.apiKey];
     console.log("newApiKeys", newApiKeys);
     setApiKeys(newApiKeys);
   }
