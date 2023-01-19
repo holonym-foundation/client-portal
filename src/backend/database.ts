@@ -23,17 +23,17 @@ if (process.env.NODE_ENV === "development") {
 }
 
 async function initializeProofClient(ProofClient: ProofClientModel) {
-  await ProofClient.deleteOne({
-    clientId: "0",
-  }).exec();
   if (process.env.NODE_ENV === "development") {
+    await ProofClient.deleteOne({
+      clientId: "0",
+    }).exec();
     const passwordDigest = await bcrypt.hash(
       process.env.ADMIN_PASSWORD as string,
       SALT
     );
     const testClientData = {
       clientId: "0",
-      name: "Holonym",
+      displayName: "Holonym",
       username: "holonym",
       passwordDigest,
       apiKeys: [{ key: "123", active: true }],

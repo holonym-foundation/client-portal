@@ -6,7 +6,7 @@ import { ProofClient, ProofSession } from "../../../backend/models";
 import { initializeMongoose } from "../../../backend/database";
 import type { ProofSessionDoc } from "../../../types/types";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
+async function handleGet(req: NextApiRequest, res: NextApiResponse<any>) {
   console.log("GET /admin/sessions: Entered");
   const apiKey = req.headers["x-api-key"];
 
@@ -113,5 +113,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       delete session.__v;
     });
     return res.status(200).json(sessions);
+  }
+}
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
+  if (req.method === "GET") {
+    return handleGet(req, res);
   }
 }

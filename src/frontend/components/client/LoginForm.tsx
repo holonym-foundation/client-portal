@@ -12,6 +12,8 @@ interface LoginFormProps {
   onLogin: () => void;
 }
 
+// TODO: Rewrite this component to be the UI for the next-auth signin page
+
 function LoginForm({ onLogin }: LoginFormProps) {
   const [formData, setFormData] = useState<FormData>({
     username: "",
@@ -19,21 +21,22 @@ function LoginForm({ onLogin }: LoginFormProps) {
   });
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const resp = await fetch(`${thisUrl}/api/clients/auth`, {
-      method: "GET",
-      headers: {
-        Authorization:
-          "Basic " + window.btoa(formData.username + ":" + formData.password),
-      },
-    });
-    const data = await resp.json();
-    if (resp.status == 200) {
-      localStorage.setItem("username", formData.username);
-      localStorage.setItem("password", formData.password);
-      onLogin();
-    }
-    console.log(data);
+    // old
+    // event.preventDefault();
+    // const resp = await fetch(`${thisUrl}/api/clients/auth`, {
+    //   method: "GET",
+    //   headers: {
+    //     Authorization:
+    //       "Basic " + window.btoa(formData.username + ":" + formData.password),
+    //   },
+    // });
+    // const data = await resp.json();
+    // if (resp.status == 200) {
+    //   localStorage.setItem("username", formData.username);
+    //   localStorage.setItem("password", formData.password);
+    //   onLogin();
+    // }
+    // console.log(data);
   }
 
   function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {

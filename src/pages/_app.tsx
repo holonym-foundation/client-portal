@@ -1,33 +1,19 @@
 import "../frontend/styles/globals.css";
 import type { AppProps } from "next/app";
-import classNames from "classnames";
-import { useSessionStorage } from "usehooks-ts";
-import Navbar from "../frontend/components/Navbar";
+import { SessionProvider } from "next-auth/react";
+import Layout from "../frontend/components/Layout";
 
-export default function App({ Component, pageProps }: AppProps) {
-  const [adminLoggedIn, setAdminLoggedIn] = useSessionStorage<boolean>(
-    "adminLoggedIn",
-    false
-  );
-  const [clientLoggedIn, setClientLoggedIn] = useSessionStorage<boolean>(
-    "clientLoggedIn",
-    false
-  );
-
-  const mainClasses = classNames({
-    "ml-44 mr-10 py-10": adminLoggedIn || clientLoggedIn,
-    // "pt-10 text-center": !adminLoggedIn && !clientLoggedIn,
-    "pt-10": !adminLoggedIn && !clientLoggedIn,
-  });
-
+export default function App({
+  Component,
+  pageProps: { session, ...pageProps },
+}: AppProps) {
   return (
     <>
-      <div className="min-h-screen bg-page-bg text-black">
-        <Navbar />
-        <div className={mainClasses}>
+      <SessionProvider session={session}>
+        <Layout>
           <Component {...pageProps} />
-        </div>
-      </div>
+        </Layout>
+      </SessionProvider>
     </>
   );
 }

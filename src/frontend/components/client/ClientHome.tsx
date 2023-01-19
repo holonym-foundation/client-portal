@@ -1,61 +1,28 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import type { APIKey, ProofSession } from "../../../types/types";
 import { thisUrl } from "../../../frontend/constants/misc";
 import { useSessionStorage } from "usehooks-ts";
 import SessionsView from "./SessionsView";
 import APIKeysView from "./APIKeysView";
 
-export default function ClientHome() {
+interface Props {
+  apiKeys: APIKey[];
+  sessions: ProofSession[];
+}
+
+export default function ClientHome(props: Props) {
   const [selectedView, setSelectedView] = useSessionStorage(
     "clientSelectedView",
     "sessions"
   );
-  const [apiKeys, setApiKeys] = useState<APIKey[]>([]);
-  const [sessions, setSessions] = useState<ProofSession[]>([]);
-
-  useEffect(() => {
-    (async () => {
-      const resp = await fetch(`${thisUrl}/api/clients/keys`, {
-        method: "GET",
-        headers: {
-          Authorization:
-            "Basic " +
-            window.btoa(
-              localStorage.getItem("username") + ":" + localStorage.getItem("password")
-            ),
-        },
-      });
-      const data = await resp.json();
-      setApiKeys(data.apiKeys);
-    })();
-    (async () => {
-      const resp = await fetch(`${thisUrl}/api/clients/sessions`, {
-        method: "GET",
-        headers: {
-          Authorization:
-            "Basic " +
-            window.btoa(
-              localStorage.getItem("username") + ":" + localStorage.getItem("password")
-            ),
-        },
-      });
-      const data = await resp.json();
-      setSessions(data.sessions);
-      console.log(data);
-    })();
-  }, []);
+  const [apiKeys, setApiKeys] = useState(props.apiKeys);
+  const { data: session, status } = useSession();
 
   async function handleClickAddAPIKey() {
     const resp = await fetch(`${thisUrl}/api/clients/keys`, {
       method: "POST",
-      headers: {
-        Authorization:
-          "Basic " +
-          window.btoa(
-            localStorage.getItem("username") + ":" + localStorage.getItem("password")
-          ),
-      },
     });
     const data = await resp.json();
     const newApiKeys = apiKeys ? [...apiKeys, data.apiKey] : [data.apiKey];
@@ -71,13 +38,6 @@ export default function ClientHome() {
     if (!confirmation) return;
     const resp = await fetch(`${thisUrl}/api/clients/keys/${apiKey}`, {
       method: "DELETE",
-      headers: {
-        Authorization:
-          "Basic " +
-          window.btoa(
-            localStorage.getItem("username") + ":" + localStorage.getItem("password")
-          ),
-      },
     });
     const data = await resp.json();
     const revokedApiKey = data.apiKey;
@@ -99,7 +59,7 @@ export default function ClientHome() {
           onClickRevokeAPIKey={handleClickRevokeAPIKey}
         />
       ) : (
-        <SessionsView sessions={sessions} />
+        <SessionsView sessions={props.sessions} />
       )}
     </>
   );

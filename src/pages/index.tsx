@@ -1,29 +1,67 @@
 import Head from "next/head";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import { useSessionStorage } from "usehooks-ts";
+import { GetServerSideProps } from "next";
+import { unstable_getServerSession } from "next-auth/next";
+import { authOptions } from "./api/auth/[...nextauth]";
+import type { NextApiRequest, NextApiResponse } from "next";
+import { initializeMongoose } from "../backend/database";
+import { ProofSession, ProofClient } from "../backend/models";
 import LoginForm from "../frontend/components/client/LoginForm";
 import ClientHome from "../frontend/components/client/ClientHome";
+import { APIKey } from "../types/types";
 
-export default function Index() {
-  const [clientLoggedIn, setClientLoggedIn] = useSessionStorage<boolean>(
-    "clientLoggedIn",
-    false
+interface Props {
+  // TODO: Update this
+  session: any;
+  proofSessions: any;
+  apiKeys: any;
+}
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await unstable_getServerSession(
+    context.req,
+    context.res,
+    authOptions
   );
 
-  useEffect(() => {
-    const username = localStorage.getItem("username");
-    const password = localStorage.getItem("password");
-    if (username && password) {
-      setClientLoggedIn(true);
-    }
-  }, []);
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/api/auth/signin",
+        permanent: false,
+      },
+    };
+  }
 
-  useEffect(() => {
-    if (!clientLoggedIn) return;
-    // Get sessions from server
-  }, [clientLoggedIn]);
+  await initializeMongoose();
 
+  const proofSessions =
+    (await ProofSession.find({ clientId: session.user.clientId }).exec())?.map(
+      (session) => ({
+        sessionId: session.sessionId,
+        clientId: session.clientId,
+        createdAt: session.createdAt,
+        consumedAt: session?.consumedAt ?? null,
+        consumedBy: session?.consumedBy ?? null,
+      })
+    ) ?? [];
+  const client = await ProofClient.findOne({ clientId: session.user.clientId }).exec();
+
+  const apiKeys = client?.apiKeys.map((key: APIKey) => ({
+    key: key.key,
+    active: key.active,
+  }));
+
+  return {
+    props: {
+      session,
+      proofSessions: proofSessions,
+      apiKeys: apiKeys,
+    },
+  };
+};
+
+export default function Index({ session, proofSessions, apiKeys }: Props) {
   return (
     <>
       <Head>
@@ -33,11 +71,7 @@ export default function Index() {
         {/* <link rel="icon" href="/favicon.ico" /> */}
       </Head>
       <div>
-        {clientLoggedIn ? (
-          <ClientHome />
-        ) : (
-          <LoginForm onLogin={() => setClientLoggedIn(true)} />
-        )}
+        <ClientHome sessions={proofSessions} apiKeys={apiKeys} />
       </div>
     </>
   );

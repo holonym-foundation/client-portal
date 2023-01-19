@@ -10,7 +10,7 @@ const ProofClientSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  name: {
+  displayName: {
     type: String,
     required: true,
   },

@@ -17,7 +17,7 @@ export interface APIKey {
 
 export interface ProofClientDoc {
   clientId: string;
-  name: string;
+  displayName: string;
   username: string;
   passwordDigest: string;
   apiKeys: APIKey[];

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { signOut, useSession } from "next-auth/react";
 import classNames from "classnames";
 import { useSessionStorage } from "usehooks-ts";
 import HolonymLogo from "../img/Holonym-Logo-B.png";
@@ -19,22 +20,18 @@ function Navbar() {
     "adminSelectedView",
     "home"
   );
-  const [clientLoggedIn, setClientLoggedIn] = useSessionStorage<boolean>(
-    "clientLoggedIn",
-    false
-  );
   const [clientSelectedView, setClientSelectedView] = useSessionStorage(
     "clientSelectedView",
     "sessions"
   );
 
   useEffect(() => {
-    if (router.pathname.startsWith("/admin") && localStorage.getItem("apiKey")) {
+    if (router.pathname.startsWith("/admin")) {
       setIsAdmin(true);
     } else if (!router.pathname.startsWith("/admin")) {
       setIsAdmin(false);
     }
-    if (router.pathname.endsWith("/admin") && localStorage.getItem("apiKey")) {
+    if (router.pathname.endsWith("/admin")) {
       setAdminSelectedView("home");
     } else if (
       router.pathname.startsWith("/admin/client") &&
@@ -50,12 +47,11 @@ function Navbar() {
     } else {
       setAdminLoggedIn(false);
     }
-    if (localStorage.getItem("username") && localStorage.getItem("password")) {
-      setClientLoggedIn(true);
-    } else {
-      setClientLoggedIn(false);
-    }
   }, []);
+
+  // Client users are authenticated with NextAuth.
+  // Admin users are authenticated with an API key.
+  const { data: session, status } = useSession();
 
   const adminHomeBtnClasses = classNames({
     "cursor-pointer border-b-2 hover:border-holo-blue ease-in-out duration-200": true,
@@ -106,16 +102,12 @@ function Navbar() {
               </ul>
             </div>
           </>
-        ) : clientLoggedIn ? (
+        ) : !isAdmin && session ? (
           <>
             <div className="fixed w-full min-h-min h-10 top-0 z-0 pl-44 flex bg-page-bg shadow-sm shadow-holo-blue">
               <button
                 className="ml-auto mr-10 hover:text-blue-600 hover:cursor"
-                onClick={() => {
-                  localStorage.removeItem("username");
-                  localStorage.removeItem("password");
-                  setClientLoggedIn(false);
-                }}
+                onClick={() => signOut()}
               >
                 Sign out
               </button>
