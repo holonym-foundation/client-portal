@@ -18,9 +18,9 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse<any>) {
 
   await initializeMongoose();
 
-  console.log("session", session);
-
-  const client = await ProofClient.findOne({ username: session.user.username }).exec();
+  const client = await ProofClient.findOne({
+    username: session?.user?.username,
+  }).exec();
   if (!client) {
     return { error: "Client not found" };
   }
@@ -56,9 +56,9 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
 
   await initializeMongoose();
 
-  console.log("session", session);
-
-  const client = await ProofClient.findOne({ username: session.user.username }).exec();
+  const client = await ProofClient.findOne({
+    username: session?.user?.username,
+  }).exec();
   if (!client) {
     return { error: "Client not found" };
   }

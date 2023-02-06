@@ -33,10 +33,19 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
+  if (session?.user?.role === "admin") {
+    return {
+      redirect: {
+        destination: "/admin",
+        permanent: false,
+      },
+    };
+  }
+
   await initializeMongoose();
 
   const proofSessions =
-    (await ProofSession.find({ clientId: session.user.clientId }).exec())?.map(
+    (await ProofSession.find({ clientId: session?.user?.id }).exec())?.map(
       (session) => ({
         sessionId: session.sessionId,
         clientId: session.clientId,
@@ -45,7 +54,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         consumedBy: session?.consumedBy ?? null,
       })
     ) ?? [];
-  const client = await ProofClient.findOne({ clientId: session.user.clientId }).exec();
+  const client = await ProofClient.findOne({ clientId: session?.user?.id }).exec();
 
   const apiKeys = client?.apiKeys.map((key: APIKey) => ({
     key: key.key,

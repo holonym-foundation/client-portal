@@ -8,11 +8,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     "adminLoggedIn",
     false
   );
-  const { data: clientSession, status } = useSession();
+  const { data: session, status } = useSession();
 
   const mainClasses = classNames({
-    "ml-44 mr-10 py-10": adminLoggedIn || clientSession,
-    "pt-10": !adminLoggedIn && !clientSession,
+    "ml-44 mr-10 py-10": session,
+    "pt-10": !session,
   });
 
   return (

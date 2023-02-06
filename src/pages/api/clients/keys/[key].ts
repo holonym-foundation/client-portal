@@ -16,9 +16,9 @@ async function handleDelete(req: NextApiRequest, res: NextApiResponse) {
 
   await initializeMongoose();
 
-  console.log("session", session);
-
-  const client = await ProofClient.findOne({ username: session.user.username }).exec();
+  const client = await ProofClient.findOne({
+    username: session?.user?.username,
+  }).exec();
   if (!client) {
     return { error: "Client not found" };
   }

@@ -2,7 +2,7 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import type { APIKey, ProofSession } from "../../../types/types";
-import { thisUrl } from "../../../frontend/constants/misc";
+import { thisOrigin } from "../../../frontend/constants/misc";
 import { useSessionStorage } from "usehooks-ts";
 import SessionsView from "./SessionsView";
 import APIKeysView from "./APIKeysView";
@@ -21,7 +21,7 @@ export default function ClientHome(props: Props) {
   const { data: session, status } = useSession();
 
   async function handleClickAddAPIKey() {
-    const resp = await fetch(`${thisUrl}/api/clients/keys`, {
+    const resp = await fetch(`${thisOrigin}/api/clients/keys`, {
       method: "POST",
     });
     const data = await resp.json();
@@ -36,7 +36,7 @@ export default function ClientHome(props: Props) {
       `Are you sure you want to revoke the following API key?\n${apiKey}`
     );
     if (!confirmation) return;
-    const resp = await fetch(`${thisUrl}/api/clients/keys/${apiKey}`, {
+    const resp = await fetch(`${thisOrigin}/api/clients/keys/${apiKey}`, {
       method: "DELETE",
     });
     const data = await resp.json();

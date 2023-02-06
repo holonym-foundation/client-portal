@@ -1,24 +1,38 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
+import { unstable_getServerSession } from "next-auth/next";
 import mongoose from "mongoose";
 import { startOfMonth, subMonths } from "date-fns";
+import { authOptions } from "../auth/[...nextauth]";
 import { ProofClient, ProofSession } from "../../../backend/models";
 import { initializeMongoose } from "../../../backend/database";
 import type { ProofSessionDoc } from "../../../types/types";
 
 async function handleGet(req: NextApiRequest, res: NextApiResponse<any>) {
   console.log("GET /admin/sessions: Entered");
-  const apiKey = req.headers["x-api-key"];
 
-  if (!apiKey) {
-    console.log("GET /admin/sessions: API key not provided");
-    return res.status(400).json({ error: "API key not provided" });
+  const session = await unstable_getServerSession(req, res, authOptions);
+
+  if (!session) {
+    console.log(`GET admin/sessions/: Admin is not logged in`);
+    return res.status(401).json({ error: "Admin is not logged in" });
   }
 
-  if (apiKey != process.env.ADMIN_API_KEY) {
-    console.log("GET /admin/sessions: API key not valid");
-    return res.status(401).json({ error: "API key not valid" });
+  if (session?.user?.role !== "admin") {
+    console.log(`GET admin/sessions/: User is not an admin`);
+    return res.status(401).json({ error: "User is not an admin" });
   }
+
+  // old auth method
+  // const apiKey = req.headers["x-api-key"];
+  // if (!apiKey) {
+  //   console.log("GET /admin/sessions: API key not provided");
+  //   return res.status(400).json({ error: "API key not provided" });
+  // }
+  // if (apiKey != process.env.ADMIN_API_KEY) {
+  //   console.log("GET /admin/sessions: API key not valid");
+  //   return res.status(401).json({ error: "API key not valid" });
+  // }
 
   await initializeMongoose();
 

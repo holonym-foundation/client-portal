@@ -1,174 +1,108 @@
 import Image from "next/image";
 import Link from "next/link";
+import { GetServerSideProps } from "next";
 import React, { useEffect, useState } from "react";
+import { unstable_getServerSession } from "next-auth/next";
 import { subMonths } from "date-fns";
-import { useSessionStorage } from "usehooks-ts";
-import { thisUrl } from "../../frontend/constants/misc";
+import { authOptions } from "../api/auth/[...nextauth]";
+import { thisOrigin } from "../../frontend/constants/misc";
 
-interface FormData {
-  apiKey: string;
-}
-
-interface LoginFormProps {
-  onLogin: () => void;
-}
-
-function LoginForm({ onLogin }: LoginFormProps) {
-  const [formData, setFormData] = useState<FormData>({
-    apiKey: "",
-  });
-
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const resp = await fetch(`${thisUrl}/api/admin/auth`, {
-      headers: {
-        "X-API-KEY": formData.apiKey,
-      },
-    });
-    const data = await resp.json();
-    if (resp.status !== 200) {
-      alert(data.data);
-      return;
-    } else {
-      localStorage.setItem("apiKey", formData.apiKey);
-      onLogin();
-    }
-  }
-
-  function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const { name, value } = event.target;
-    setFormData({ ...formData, [name]: value });
-  }
-
-  return (
-    <div className="flex">
-      <div className="m-auto mt-10">
-        <div>
-          <h2 className="font-clover-medium text-3xl">Client Portal - Admin Login</h2>
-        </div>
-        <form className="login-form" onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="apiKey">API Key</label>
-            <input
-              type="password"
-              id="password"
-              name="apiKey"
-              className="form-input"
-              value={formData.apiKey}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div className="form-group text-right">
-            <button className="btn btn-primary">Submit</button>
-          </div>
-        </form>
-      </div>
-    </div>
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await unstable_getServerSession(
+    context.req,
+    context.res,
+    authOptions
   );
-}
+  if (session?.user?.role !== "admin") {
+    return {
+      redirect: {
+        destination: "/api/auth/signin",
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: {
+      sessionsOverview: null,
+    },
+  };
+};
 
 export default function AdminHome() {
-  const [adminLoggedIn, setAdminLoggedIn] = useSessionStorage<boolean>(
-    "adminLoggedIn",
-    false
-  );
   const [sessionsOverview, setSessionsOverview] = useState<any>(null);
 
   useEffect(() => {
-    const apiKey = localStorage.getItem("apiKey");
-    if (apiKey) setAdminLoggedIn(true);
-  }, []);
-
-  useEffect(() => {
-    if (!adminLoggedIn) return;
-    const apiKey = localStorage.getItem("apiKey");
-    if (!apiKey) return;
     (async () => {
-      const resp = await fetch(`${thisUrl}/api/admin/sessions?overview=true`, {
-        headers: {
-          "X-API-KEY": apiKey,
-        },
-      });
+      const resp = await fetch(`${thisOrigin}/api/admin/sessions?overview=true`);
       const data = await resp.json();
-      console.log(data);
       setSessionsOverview(data);
     })();
-  }, [adminLoggedIn]);
+  }, []);
 
   return (
     <div>
-      {!adminLoggedIn ? (
-        <LoginForm onLogin={() => setAdminLoggedIn(true)} />
-      ) : (
-        <>
-          <h1 className="font-clover-medium text-3xl py-6">
-            Admin View - Sessions Overview
-          </h1>
-          <div>
-            <div className="leading-9">
-              <p className="text-lg">Total sessions: {sessionsOverview?.total}</p>
-            </div>
-            <table className="w-full border-collapse mt-8 border-spacing-0">
-              <thead className="bg-card-bg">
-                <tr>
-                  <th className="p-4 text-left border-b-2 border-gray-200">
-                    Username
-                  </th>
-                  <th className="p-4 text-left border-b-2 border-gray-200">
-                    Client ID
-                  </th>
-                  <th className="p-4 text-left border-b-2 border-gray-200">
-                    Total sessions
-                  </th>
-                  <th className="p-4 text-left border-b-2 border-gray-200">
-                    Num sessions (
-                    {new Date(subMonths(new Date(), 1)).toLocaleString("default", {
-                      month: "short",
-                    })}{" "}
-                    {new Date(subMonths(new Date(), 1)).toString().split(" ")[3]})
-                  </th>
-                  <th className="p-4 text-left border-b-2 border-gray-200">
-                    Num sessions (
-                    {new Date().toLocaleString("default", { month: "short" })}{" "}
-                    {new Date().toString().split(" ")[3]})
-                  </th>
-                  <th className="p-4 text-left border-b-2 border-gray-200"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {sessionsOverview
-                  ? sessionsOverview?.totalByClientId?.map((sessionMetadata: any) => (
-                      <tr key={sessionMetadata.clientId}>
-                        <td className="p-4 text-left border-b-2 border-gray-200">
-                          {sessionMetadata.username}
-                        </td>
-                        <td className="p-4 text-left border-b-2 border-gray-200">
-                          {sessionMetadata.clientId}
-                        </td>
-                        <td className="p-4 text-left border-b-2 border-gray-200">
-                          {sessionMetadata.total}
-                        </td>
-                        <td className="p-4 text-left border-b-2 border-gray-200">
-                          {sessionMetadata.totalLastMonth}
-                        </td>
-                        <td className="p-4 text-left border-b-2 border-gray-200">
-                          {sessionMetadata.totalThisMonth}
-                        </td>
-                        <td className="p-4 text-left border-b-2 border-gray-200">
-                          <Link href={`/admin/clients/${sessionMetadata.clientId}`}>
-                            <p className="text-blue-600 hover:underline hover:cursor-pointer">
-                              View details
-                            </p>
-                          </Link>
-                        </td>
-                      </tr>
-                    ))
-                  : null}
-              </tbody>
-            </table>
-          </div>
-        </>
-      )}
+      <h1 className="font-clover-medium text-3xl py-6">
+        Admin View - Sessions Overview
+      </h1>
+      <div>
+        <div className="leading-9">
+          <p className="text-lg">Total sessions: {sessionsOverview?.total}</p>
+        </div>
+        <table className="w-full border-collapse mt-8 border-spacing-0">
+          <thead className="bg-card-bg">
+            <tr>
+              <th className="p-4 text-left border-b-2 border-gray-200">Username</th>
+              <th className="p-4 text-left border-b-2 border-gray-200">Client ID</th>
+              <th className="p-4 text-left border-b-2 border-gray-200">
+                Total sessions
+              </th>
+              <th className="p-4 text-left border-b-2 border-gray-200">
+                Num sessions (
+                {new Date(subMonths(new Date(), 1)).toLocaleString("default", {
+                  month: "short",
+                })}{" "}
+                {new Date(subMonths(new Date(), 1)).toString().split(" ")[3]})
+              </th>
+              <th className="p-4 text-left border-b-2 border-gray-200">
+                Num sessions (
+                {new Date().toLocaleString("default", { month: "short" })}{" "}
+                {new Date().toString().split(" ")[3]})
+              </th>
+              <th className="p-4 text-left border-b-2 border-gray-200"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {sessionsOverview
+              ? sessionsOverview?.totalByClientId?.map((sessionMetadata: any) => (
+                  <tr key={sessionMetadata.clientId}>
+                    <td className="p-4 text-left border-b-2 border-gray-200">
+                      {sessionMetadata.username}
+                    </td>
+                    <td className="p-4 text-left border-b-2 border-gray-200">
+                      {sessionMetadata.clientId}
+                    </td>
+                    <td className="p-4 text-left border-b-2 border-gray-200">
+                      {sessionMetadata.total}
+                    </td>
+                    <td className="p-4 text-left border-b-2 border-gray-200">
+                      {sessionMetadata.totalLastMonth}
+                    </td>
+                    <td className="p-4 text-left border-b-2 border-gray-200">
+                      {sessionMetadata.totalThisMonth}
+                    </td>
+                    <td className="p-4 text-left border-b-2 border-gray-200">
+                      <Link href={`/admin/clients/${sessionMetadata.clientId}`}>
+                        <p className="text-blue-600 hover:underline hover:cursor-pointer">
+                          View details
+                        </p>
+                      </Link>
+                    </td>
+                  </tr>
+                ))
+              : null}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

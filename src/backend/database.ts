@@ -15,11 +15,6 @@ global.mongoose = global?.mongoose ?? mongoose;
 
 if (process.env.NODE_ENV === "development") {
   global.mongoose.set("debug", true);
-  // TODO: Delete this log
-  console.log(
-    "connections length",
-    global.mongoose?.connection?.base?.connections?.length
-  );
 }
 
 async function initializeProofClient(ProofClient: ProofClientModel) {

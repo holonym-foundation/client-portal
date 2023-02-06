@@ -1,4 +1,4 @@
-import NextAuth from "next-auth";
+import NextAuth, { Session, User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { initializeMongoose } from "../../../backend/database";
@@ -17,9 +17,21 @@ export const authOptions = {
         username: { label: "Username", type: "text", placeholder: "username" },
         password: { label: "Password", type: "password", placeholder: "password" },
       },
-      async authorize(credentials, req) {
+      authorize: async (credentials, req) => {
         if (!credentials?.username || !credentials?.password) {
           return null;
+        }
+
+        if (
+          credentials.username === "admin" &&
+          credentials.password === process.env.ADMIN_PASSWORD
+        ) {
+          return {
+            displayName: "Admin",
+            username: "admin",
+            id: "0",
+            role: "admin",
+          };
         }
 
         await initializeMongoose();
@@ -40,7 +52,8 @@ export const authOptions = {
           const user = {
             displayName: client.displayName,
             username: client.username,
-            clientId: client.clientId,
+            id: client.clientId,
+            role: "client",
           };
           // Any object returned will be saved in `user` property of the JWT
           return user;
@@ -54,11 +67,19 @@ export const authOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user, account, profile, isNewUser }) {
+    async jwt({ token, user, account, profile, isNewUser }: any) {
       if (user) token.user = user;
       return token;
     },
-    async session({ session, user, token }) {
+    async session({
+      session,
+      user,
+      token,
+    }: {
+      session: Session;
+      user: User;
+      token: any;
+    }) {
       session.user = token.user;
       return session;
     },

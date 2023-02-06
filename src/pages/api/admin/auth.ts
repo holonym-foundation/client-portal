@@ -2,7 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse<any>) {
-  // TODO: Rewrite this using NextAuth
+  // TODO: Unnecessary now that we are using NextAuth
   console.log("GET /admin/auth: Entered");
   const apiKey = req.headers["x-api-key"];
 
