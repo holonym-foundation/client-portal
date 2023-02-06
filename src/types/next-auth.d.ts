@@ -6,9 +6,11 @@ import NextAuth, { Session, DefaultUser } from "next-auth";
 
 // declare module "next-auth/jwt" {
 declare module "next-auth" {
+  type Role = "admin" | "client";
   interface User extends DefaultUser {
+    // NOTE: user.id and proofClient.clientId are the same
     username?: string;
-    role?: "admin" | "client";
+    role?: Role;
     displayName?: string;
   }
   interface JWT {

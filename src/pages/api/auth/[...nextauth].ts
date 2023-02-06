@@ -1,4 +1,4 @@
-import NextAuth, { Session, User } from "next-auth";
+import NextAuth, { Session, User, Role } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { initializeMongoose } from "../../../backend/database";
@@ -30,7 +30,7 @@ export const authOptions = {
             displayName: "Admin",
             username: "admin",
             id: "0",
-            role: "admin",
+            role: "admin" as Role,
           };
         }
 
@@ -53,7 +53,7 @@ export const authOptions = {
             displayName: client.displayName,
             username: client.username,
             id: client.clientId,
-            role: "client",
+            role: "client" as Role,
           };
           // Any object returned will be saved in `user` property of the JWT
           return user;
