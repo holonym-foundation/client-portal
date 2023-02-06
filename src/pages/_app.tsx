@@ -13,6 +13,7 @@ export default function App({
         <Layout>
           <Component {...pageProps} />
         </Layout>
+        <div id="modals" />
       </SessionProvider>
     </>
   );

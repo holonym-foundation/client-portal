@@ -28,6 +28,12 @@ function ClientNavbar() {
     "border-card-bg": clientSelectedView !== "api-keys",
   });
 
+  const accountBtnClasses = classNames({
+    "cursor-pointer border-b-2 hover:border-holo-blue ease-in-out duration-200": true,
+    "border-holo-blue": clientSelectedView === "account",
+    "border-card-bg": clientSelectedView !== "account",
+  });
+
   return (
     <>
       <div>
@@ -60,8 +66,15 @@ function ClientNavbar() {
                 API Keys
               </button>
             </li>
-            {/* TODO: Account page & button */}
-            {/* <li className="cursor-pointer border-b-2 border-card-bg hover:border-holo-blue">Account</li> */}
+            <li>
+              <button
+                className={accountBtnClasses}
+                data-selected={clientSelectedView === "account"}
+                onClick={() => setClientSelectedView("account")}
+              >
+                Account
+              </button>
+            </li>
           </ul>
         </div>
       </div>

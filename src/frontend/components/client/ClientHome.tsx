@@ -6,6 +6,7 @@ import { thisOrigin } from "../../../frontend/constants/misc";
 import { useSessionStorage } from "usehooks-ts";
 import SessionsView from "./SessionsView";
 import APIKeysView from "./APIKeysView";
+import AccountView from "./AccountView";
 
 interface Props {
   apiKeys: APIKey[];
@@ -58,8 +59,10 @@ export default function ClientHome(props: Props) {
           onClickAddAPIKey={handleClickAddAPIKey}
           onClickRevokeAPIKey={handleClickRevokeAPIKey}
         />
-      ) : (
+      ) : selectedView === "sessions" ? (
         <SessionsView sessions={props.sessions} />
+      ) : (
+        <AccountView />
       )}
     </>
   );
