@@ -30,6 +30,12 @@ function AdminNavbar() {
     "border-card-bg": adminSelectedView !== "home",
   });
 
+  const manageClientsBtnClasses = classNames({
+    "cursor-pointer border-b-2 hover:border-holo-blue ease-in-out duration-200": true,
+    "border-holo-blue": adminSelectedView === "manage-clients",
+    "border-card-bg": adminSelectedView !== "manage-clients",
+  });
+
   return (
     <>
       <div>
@@ -41,7 +47,7 @@ function AdminNavbar() {
             Sign out
           </button>
         </div>
-        <div className="fixed min-w-min w-36 h-screen z-10 bg-card-bg p-4 shadow-sm shadow-holo-blue">
+        <div className="fixed min-w-min w-40 h-screen z-10 bg-card-bg p-4 shadow-sm shadow-holo-blue">
           <Image src={HolonymLogo} alt="Holonym Logo" width={200} height={200} />
           <ul className="list-none flex flex-col gap-4 text-lg pt-24">
             <li>
@@ -50,6 +56,14 @@ function AdminNavbar() {
                 onClick={() => setAdminSelectedView("home")}
               >
                 <Link href="/admin">Home</Link>
+              </button>
+            </li>
+            <li>
+              <button
+                className={manageClientsBtnClasses}
+                onClick={() => setAdminSelectedView("manage-clients")}
+              >
+                <Link href="/admin/manage-clients">Manage Clients</Link>
               </button>
             </li>
           </ul>

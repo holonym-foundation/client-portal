@@ -45,7 +45,7 @@ function ClientNavbar() {
             Sign out
           </button>
         </div>
-        <div className="fixed min-w-min w-36 h-screen z-10 bg-card-bg p-4 shadow-sm shadow-holo-blue">
+        <div className="fixed min-w-min w-40 h-screen z-10 bg-card-bg p-4 shadow-sm shadow-holo-blue">
           <Image src={HolonymLogo} alt="Holonym Logo" width={200} height={200} />
           <ul className="list-none flex flex-col gap-4 text-lg pt-24">
             <li>
