@@ -11,7 +11,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const { data: session, status } = useSession();
 
   const mainClasses = classNames({
-    "ml-44 mr-10 py-10": session,
+    "ml-48 mr-10 py-10": session,
     "pt-10": !session,
   });
 
