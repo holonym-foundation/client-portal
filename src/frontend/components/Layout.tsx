@@ -17,7 +17,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <div className="min-h-screen bg-page-bg text-black">
+      <div className="min-h-screen bg-page-bg text-black text-sm">
         <Navbar />
         <div className={mainClasses}>{children}</div>
       </div>

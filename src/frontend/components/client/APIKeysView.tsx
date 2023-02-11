@@ -18,16 +18,16 @@ function APIKeysView({
       <table className="w-full border-collapse border-spacing-0">
         <thead className="bg-card-bg">
           <tr>
-            <th className="p-4 text-left border-b-2 border-gray-200">API Key</th>
-            <th className="p-4 text-left border-b-2 border-gray-200">Active</th>
-            <th className="p-4 text-left border-b-2 border-gray-200">Options</th>
+            <th className="p-2 text-left border-b-2 border-gray-200">API Key</th>
+            <th className="p-2 text-left border-b-2 border-gray-200">Active</th>
+            <th className="p-2 text-left border-b-2 border-gray-200">Options</th>
           </tr>
         </thead>
         <tbody>
           {apiKeys
             ? apiKeys.map((apiKey) => {
                 const keyClasses = classNames({
-                  "p-4 text-left border-b-2 border-gray-200": true,
+                  "p-2 text-left border-b-2 border-gray-200": true,
                   "line-through": !apiKey.active,
                   "text-gray-500": !apiKey.active,
                 });
@@ -39,10 +39,10 @@ function APIKeysView({
                 return (
                   <tr key={apiKey.key}>
                     <td className={keyClasses}>{apiKey.key}</td>
-                    <td className="p-4 text-left border-b-2 border-gray-200">
+                    <td className="p-2 text-left border-b-2 border-gray-200">
                       {apiKey.active ? "Yes" : "No"}
                     </td>
-                    <td className="p-4 text-left border-b-2 border-gray-200">
+                    <td className="p-2 text-left border-b-2 border-gray-200">
                       <button
                         data-value={apiKey.key}
                         className={buttonClasses}
@@ -65,7 +65,7 @@ function APIKeysView({
             : null}
           <tr>
             <td
-              className="p-4 text-left border-b-2 border-gray-200"
+              className="p-2 text-left border-b-2 border-gray-200"
               colSpan={3}
               style={{ textAlign: "center" }}
             >
